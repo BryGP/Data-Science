@@ -1,42 +1,24 @@
-import pandas as pd
-import plotly.express as px
+import sys
+import os
+import importlib
 
-#aquí cargar los datos
-df = pd.read_csv("data\conjunto_de_datos_natalidad_2022.csv")
+# Agregar la carpeta raíz del proyecto al sys.path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-df_jalisco = df[df['ent_ocurr'] == 14]
+# Importar dinamicamente el modulo
+imports = importlib.import_module('utils.imports')
+read_diabetes = getattr(imports, 'read_diabetes')
 
-df_jalisco['edad_madn'] = pd.to_numeric(df_jalisco['edad_madn'], errors='coerce')
-df_jalisco['edad_padn'] = pd.to_numeric(df_jalisco['edad_padn'], errors='coerce')
-df_jalisco['hijos_vivo'] = pd.to_numeric(df_jalisco['hijos_vivo'], errors='coerce')
+# Ejecutar la funcion
+dataset = read_diabetes("data/datos_inegi.csv")
+print(dataset)
+print("ok")
 
+# Ejecutar la funcion
+visuals = importlib.import_module('utils.visuals')
 
-df_jalisco['edad_madn_cat'] = pd.cut(df_jalisco['edad_madn'], bins=[0, 20, 30, 40, 50, 60, 100], labels=['0-20', '21-30', '31-40', '41-50', '51-60', '60+'])
-df_jalisco['edad_padn_cat'] = pd.cut(df_jalisco['edad_padn'], bins=[0, 20, 30, 40, 50, 60, 100], labels=['0-20', '21-30', '31-40', '41-50', '51-60', '60+'])
-
-
-df_jalisco['info'] = (
-    'Edad de la Madre: ' + df_jalisco['edad_madn'].astype(str) + '<br>' +
-    'Edad del Padre: ' + df_jalisco['edad_padn'].astype(str) + '<br>' +
-    'Hijos Vivos: ' + df_jalisco['hijos_vivo'].astype(str)
-)
-
-
-fig = px.density_heatmap(
-    df_jalisco,
-    x='edad_madn_cat',
-    y='edad_padn_cat',
-    z='hijos_vivo',
-    hover_name='info',
-    labels={'edad_madn_cat': 'Edad de la Madre', 'edad_padn_cat': 'Edad del Padre', 'hijos_vivo': 'Hijos Vivos'},
-    color_continuous_scale="Viridis",
-)
-
-fig.update_layout(
-    title="Mapa de calor Jalisco",
-    xaxis_title="Edad de la Madre",
-    yaxis_title="Edad del Padre",
-)
-
-
-fig.show()
+# Generar y guardar las visualizaciones
+visuals.save_histogram(dataset, "AGE")
+visuals.save_correlation(dataset, "BMI", "S6")
+visuals.save_all_correlations(dataset, dataset.corr())
+visuals.save_all_correlations_one_image(dataset)

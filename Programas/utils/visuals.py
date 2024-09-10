@@ -1,11 +1,10 @@
 # 1. Funcion para genererar y guardar las visualizaciones (Histogramas(dataframe,"column"))
 # 2. Crear una funcion, la cual genere un folder para guardar las imcolumnnes generadas en png
 
-import seaborn as sns
 import matplotlib.pyplot as plt
-import plotly.express as px
-import numpy as np
+import seaborn as sns
 import pandas as pd
+import numpy as np
 import os
 
 def check_output_dir():
@@ -18,7 +17,6 @@ def check_output_dir():
         os.makedirs(output_dir)
     return output_dir
 
-"""
 # Crear la funcion con seaborn para generar un histograma por pares de columna
 def save_histogram(dataframe, column):
     output_dir = check_output_dir()
@@ -67,6 +65,3 @@ def save_all_correlations_one_image(dataframe):
     plt.savefig(f"{output_dir}/ALL_histograms.png")
     plt.close()
     pass
-"""
-# SEGUNDA PARTE --> INEGI
-# Crear la funcion con seaborn para generar un heatmap
