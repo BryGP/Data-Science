@@ -1,25 +1,24 @@
-import pandas as pd
-import numpy as np
+import sys
 import os
+import importlib
 
-df = pd.read_csv(r'C:\Users\bryan\Documents\ITQ\Semestre 8\Ciencia de Datos\DS env\Programas\data\datos_inegi.csv')
+# Agregar la carpeta raíz del proyecto al sys.path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-# Seleccionar las columnas de interés
-columns_normalize = df.columns[:10]
+# Importar dinamicamente el modulo
+imports = importlib.import_module('utils.imports')
+read_diabetes = getattr(imports, 'read_diabetes')
 
-# Normalizar cada columna aplicando la formula Z
-for col in columns_normalize:
-    # Convertir a numerico en caso que no sea numerico
-    df[col] = pd.to_numeric(df[col], errors='coerce')
+# Ejecutar la funcion
+dataset = read_diabetes("data/diabetes.tab.txt")
+print(dataset)
+print("ok")
 
-    # Calcular el valor promedio
-    mean = df[col].mean()
-    std = df[col].std() # Calcular la desviación estándar
-    n = len(df[col].dropna()) # Eliminar los valores nulos
+# Ejecutar la funcion
+visuals = importlib.import_module('utils.visuals')
 
-    # Aplicar la formula de normalización
-    df[col] = (1/np.sqrt(n)) * ((df[col] - mean) / std)
-
-# Guardar el archivo normalizado
-df.to_csv("output/datos_inegi_normalizados.csv", index=False)
-print("Normalización finalizada... :)")
+# Generar y guardar las visualizaciones
+visuals.save_histogram(dataset, "AGE")
+visuals.save_correlation(dataset, "BMI", "S6")
+visuals.save_all_correlations(dataset, dataset.corr())
+visuals.save_all_correlations_one_image(dataset)
