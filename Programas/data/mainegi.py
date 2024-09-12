@@ -1,24 +1,31 @@
-import sys
-import os
-import importlib
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 
-# Agregar la carpeta raíz del proyecto al sys.path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+# Cargar el archivo CSV
+file_path = r'C:\Users\bryan\Documents\ITQ\Semestre 8\Ciencia de Datos\DS env\Programas\data\datos_inegi.csv'
+data = pd.read_csv(file_path)
 
-# Importar dinamicamente el modulo
-imports = importlib.import_module('utils.imports')
-read_diabetes = getattr(imports, 'read_diabetes')
+# Mostrar las primeras filas del dataframe para entender la estructura de los datos
+print(data.head())
+estado = '1' # Seleccionar el estado de interés
+data_estado = data[data['mun_regis'] == estado] # Filtrar los datos por estado
 
-# Ejecutar la funcion
-dataset = read_diabetes("data/diabetes.tab.txt")
-print(dataset)
-print("ok")
+# Seleccionar las columnas a mostrar
+variables_interes = ['edad_madn', 'edad_padn', 'sexo']
+data_estado = data_estado[variables_interes]
+data_estado.dropna(inplace=True) # Eliminamos los residuos
 
-# Ejecutar la funcion
-visuals = importlib.import_module('utils.visuals')
+# Convertir las variables categóricas en variables dummy
+data_estado = pd.get_dummies(data_estado, columns=['edad_padn', 'sexo'], drop_first=True)
 
-# Generar y guardar las visualizaciones
-visuals.save_histogram(dataset, "AGE")
-visuals.save_correlation(dataset, "BMI", "S6")
-visuals.save_all_correlations(dataset, dataset.corr())
-visuals.save_all_correlations_one_image(dataset)
+# Generar un heatmap de correlación entre las variables
+correlation_matrix = data_estado.corr()
+
+# Configurar el tamaño del gráfico
+plt.figure(figsize=(10, 8))
+
+# Generar el heatmap
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=0.5)
+plt.title(f'Heatmap de Correlación de Variables en {estado}')
+plt.show()
