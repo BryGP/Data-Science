@@ -17,8 +17,6 @@ data_estado = data[data['mun_regis'] == estado]
 
 # Verificar si el filtrado devolvió datos
 print(f"Número de filas para el estado {estado}: {len(data_estado)}")
-
-# Seleccionar las columnas de interés
 variables_interes = ['edad_madn', 'edad_padn']
 
 # Asegurarnos de que las columnas existan en el DataFrame
@@ -28,20 +26,18 @@ for col in variables_interes:
         variables_interes.remove(col)
 
 data_estado = data_estado[variables_interes]
-data_estado.dropna(inplace=True)  # Eliminamos las filas con valores nulos
+data_estado.dropna(inplace=True)  # Eliminar residuos
 
 # Verificar si hay datos después de eliminar valores nulos
-print(f"Número de filas después de eliminar valores nulos: {len(data_estado)}")
+# print(f"Número de filas después de eliminar valores nulos: {len(data_estado)}")
 
 # Asegurarnos de que 'edad_madn' y 'edad_padn' existen antes de crear el heatmap
 if 'edad_madn' in data_estado.columns and 'edad_padn' in data_estado.columns:
     # Generar un histograma 2D entre 'edad_madn' y 'edad_padn'
     z, x_edges, y_edges = np.histogram2d(data_estado['edad_madn'], data_estado['edad_padn'], bins=[50, 50])
 
-    # Configurar el tamaño del gráfico
+    # Tamaño del gráfico
     plt.figure(figsize=(12, 10))
-
-    # Generar el heatmap
     sns.heatmap(z.T, cmap='YlOrRd', cbar_kws={'label': 'Frecuencia'})
     
     # Configurar los ejes
