@@ -1,22 +1,43 @@
 # Ciencia de Datos
 # Modelo entrenamiento y testing
-from imports import load_and_split_data, train_linear_regression, evaluate_model, plot_results
+
+import process as proc
 
 # Ruta al archivo CSV
 file_path = r'C:\Users\bryan\Documents\ITQ\Semestre 8\Ciencia de Datos\DS env\Testing\data\diabetesnorm.csv'
-    
-# Cargar y dividir los datos
-X_train, X_test, y_train, y_test = load_and_split_data(file_path)
-    
+
+# Cargar el dataset
+dataset = proc.load_diabetes_data(file_path)
+
+# Normalizar los datos (asumiendo que agregamos esta función en process.py)
+norm_dataset = proc.normalize_diabetes_data(dataset)
+
+# Dividir los datos
+training_input, training_output, test_input, test_output, selected_columns = proc.split_data(norm_dataset, 0.3)
+
 # Entrenar el modelo
-model = train_linear_regression(X_train, y_train)
-    
-# Evaluar el modelo
-mse, rmse, y_pred = evaluate_model(model, X_test, y_test)
-    
-# Imprimir los resultados
-print(f"Error Cuadrático Medio (MSE): {mse}")
-print(f"Raíz del Error Cuadrático Medio (RMSE): {rmse}")
-    
-# Visualizar los resultados
-plot_results(y_test, y_pred)
+model = proc.simple_linear_regression(training_input, training_output)
+
+# Realizar predicciones
+test_predictions = model.predict(test_input)
+
+# Obtener coeficientes
+coefficients = proc.get_coefficients(model)
+print("Coeficiente: ", coefficients)
+for col, coef in zip(training_input.columns, coefficients):
+    print(f"{col}: {coef}")
+
+# Calcular y mostrar el MSE
+MSE = proc.get_mean_squared_error(test_output, test_predictions)
+print("Error cuadrático medio: ", MSE)
+
+# Calcular y mostrar el R2 Score
+R2 = proc.get_coefficient_of_determination(model, test_input, test_output)
+print("R2 Score: ", R2)
+
+# Guardar el modelo
+output_dir = proc.check_output_dir()
+proc.save_model(model, output_dir)
+
+# Generar y guardar el gráfico de regresión
+proc.plot_regression(test_input, test_output, test_predictions, model, output_dir)
