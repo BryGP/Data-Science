@@ -1,10 +1,21 @@
-# imports.py
+import os
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 import matplotlib.pyplot as plt
+import joblib  # Para guardar y cargar el modelo
+
+# Función para crear el directorio de salida si no existe
+def check_output_dir():
+    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    output_dir = os.path.join(base_dir, 'output')
+    
+    # Crear el directorio si no existe
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+    return output_dir
 
 # Función para cargar y dividir los datos
 def load_and_split_data(file_path, test_size=0.3, random_state=42):
@@ -20,13 +31,25 @@ def load_and_split_data(file_path, test_size=0.3, random_state=42):
     
     return X_train, X_test, y_train, y_test
 
-# Función para generar y entrenar el modelo de regresión lineal
+# Función para generar y entrenar el modelo de regresión lineal, si no existe
 def train_linear_regression(X_train, y_train):
-    # Crear el modelo de regresión lineal
-    model = LinearRegression()
+    output_dir = check_output_dir()
+    model_path = os.path.join(output_dir, 'linear_regression_model.pkl')
     
-    # Entrenar el modelo con los datos de entrenamiento
-    model.fit(X_train, y_train)
+    # Verificar si el modelo ya existe
+    if os.path.exists(model_path):
+        print("Cargando modelo existente desde", model_path)
+        model = joblib.load(model_path)
+    else:
+        # Crear el modelo de regresión lineal
+        model = LinearRegression()
+        
+        # Entrenar el modelo con los datos de entrenamiento
+        model.fit(X_train, y_train)
+        
+        # Guardar el modelo en la carpeta 'output'
+        joblib.dump(model, model_path)
+        print("Modelo entrenado y guardado en", model_path)
     
     return model
 
@@ -45,6 +68,10 @@ def evaluate_model(model, X_test, y_test):
 
 # Función para visualizar los resultados
 def plot_results(y_test, y_pred):
+    # Obtener el directorio de salida
+    output_dir = check_output_dir()
+    
+    # Configurar y guardar el gráfico
     plt.figure(figsize=(10, 6))
     plt.scatter(y_test, y_pred, color='blue', alpha=0.5)
     plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--', lw=2)
@@ -52,7 +79,10 @@ def plot_results(y_test, y_pred):
     plt.ylabel('Predicciones')
     plt.title('Valores reales vs Predicciones')
     plt.tight_layout()
-    plt.savefig('regression_results.png')
+    
+    # Guardar el gráfico en el directorio 'output'
+    output_file = os.path.join(output_dir, 'regression_results.png')
+    plt.savefig(output_file)
     plt.close()
     
-    print("El gráfico de resultados se ha guardado como 'regression_results.png'")
+    print(f"El gráfico de resultados se ha guardado en {output_file}")

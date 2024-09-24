@@ -12,7 +12,7 @@
 from imports import load_and_split_data, train_linear_regression, evaluate_model, plot_results
 
 # Ruta al archivo CSV
-file_path = r'C:\Users\Bry\Documents\ITQ\Semestre 8\Ciencia de Datos\Data-Science\Testing\diabetesnorm.csv'
+file_path = r'C:\Users\bryan\Documents\ITQ\Semestre 8\Ciencia de Datos\DS env\Testing\data\diabetesnorm.csv'
     
 # Cargar y dividir los datos
 X_train, X_test, y_train, y_test = load_and_split_data(file_path)
