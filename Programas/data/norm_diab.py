@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Lee el archivo TXT
-df = pd.read_csv(r'C:\Users\bryan\Documents\ITQ\Semestre 8\Ciencia de Datos\DS env\Programas\data\diabetes.tab.txt', sep='\t')
+df = pd.read_csv(r'C:\Users\Bry\Documents\ITQ\Semestre 8\Ciencia de Datos\Data-Science\Programas\data\diabetes.tab.txt', sep='\t')
 
 # Convierte a tipo float
 df = df.astype(float)
