@@ -9,13 +9,11 @@ file_path = r'C:\Users\bryan\Documents\ITQ\Semestre 8\Ciencia de Datos\DS env\Te
 # Cargar el dataset
 dataset = proc.load_diabetes_data(file_path)
 
-# Normalizar los datos (asumiendo que agregamos esta función en process.py)
+# Normalizar los datos
 norm_dataset = proc.normalize_diabetes_data(dataset)
 
-# Dividir los datos
 training_input, training_output, test_input, test_output, selected_columns = proc.split_data(norm_dataset, 0.3)
 
-# Entrenar el modelo
 model = proc.simple_linear_regression(training_input, training_output)
 
 # Realizar predicciones
