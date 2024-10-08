@@ -61,7 +61,7 @@ def split_data(data, test_size):
 
     return train_input, train_output, test_input, test_output, selected_columns
 
-# Funcion para entrenar un modelo de regresión lineal
+# Funcion para entrenar un modelo de regresion lineal
 def logistic_regression(train_input, train_output):
     model = LogisticRegression()
     model.fit(train_input, train_output)
