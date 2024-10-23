@@ -18,7 +18,8 @@ from sklearn.metrics import accuracy_score, confusion_matrix, roc_curve, auc
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
-
+# Funcion para cargar los datos de cancer
+from ucimlrepo import fetch_ucirepo
 # Funcion para crear el directorio de salida si no existe
 def check_output_dir():
     base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -28,22 +29,22 @@ def check_output_dir():
         os.makedirs(output_dir)
     return output_dir
 
-# Funcion para cargar los datos de diabetes
-def load_diabetes_data(file_path):
-    return pd.read_csv(file_path)
+# Cargar el dataset de Breast Cancer Wisconsin (Diagnostic)
+dataset = fetch_ucirepo(id=17)  # 17 es el ID para este dataset
 
-# Funcion para normalizar los datos
-def normalize_diabetes_data(data):
-    scaler = StandardScaler()
-    # Asumimos que todas las columnas menos la última necesitan normalización
-    data_scaled = scaler.fit_transform(data.iloc[:, :-1])
-    norm_data = pd.DataFrame(data_scaled, columns=data.columns[:-1])
-    
-    # Convertir la variable objetivo en categórica
-    # Usamos la mediana como umbral, pero puedes ajustar esto según tus necesidades
-    threshold = data['Y'].median()
-    norm_data['Y'] = (data['Y'] > threshold).astype(int)
-    return norm_data
+# Extraer características y etiquetas
+X = dataset.data.features
+y = dataset.data.targets
+
+# Dataset de la UCI
+dataset = fetch_ucirepo(id=17)
+X = dataset.data.features
+y = dataset.data.targets
+
+# Convertimos a DataFrame para hacer el split
+data = pd.DataFrame(X, columns=dataset.variables)
+data['Y'] = y
+
 
 # Funcion para dividir los datos en entrenamiento y prueba
 def split_data(data, test_size):
