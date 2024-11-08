@@ -1,5 +1,4 @@
 import numpy as np
-import tensorflow as tf
 from keras import layers, regularizers
 import albumentations as A
 from sklearn.metrics import confusion_matrix
@@ -99,7 +98,7 @@ callbacks = [
 ]
 
 # Entrenar el modelo
-history = model.fit(x_train, y_train, batch_size=120, epochs=75, validation_split=0.2, callbacks=callbacks, verbose=1)
+history = model.fit(x_train, y_train, batch_size=16, epochs=50, validation_split=0.2, callbacks=callbacks, verbose=1)
 
 # Evaluar el modelo en el conjunto de prueba
 score = model.evaluate(x_test, y_test, verbose=2)
