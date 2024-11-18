@@ -23,6 +23,8 @@ print(f"Accuracy: {accuracy}")
 # Obtener la matriz de confusión
 conf_matrix = proc.get_confusion_matrix(model, test_input, test_output)
 print(f"Matriz de confusión:\n{conf_matrix}")
+print(f"Forma de los datos de entrenamiento: {training_input.shape}")
+print(f"Distribución de la variable objetivo: {training_output.value_counts(normalize=True)}")
 
 # Guardar el modelo
 output_dir = proc.check_output_dir()
@@ -30,6 +32,3 @@ proc.save_model(model, output_dir)
 
 # Generar la curva ROC
 proc.plot_roc_curve(model, test_input, test_output, output_dir)
-
-print(f"Forma de los datos de entrenamiento: {training_input.shape}")
-print(f"Distribución de la variable objetivo: {training_output.value_counts(normalize=True)}")
