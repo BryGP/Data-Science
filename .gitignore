@@ -6,8 +6,18 @@ __pycache__/
 # Ignorar los CSV
 *.csv
 
+# Ignorar los .keras
+*.keras
+
 # C extensions
 *.so
+
+# Ignorar los excel
+*.xls
+*.xlsx
+
+# Ignorar la carpeta de imagenes "ColorMask-FloodNetv1.0/"
+./ColorMasks-FloodNetv1.0
 
 # Distribution / packaging
 .Python

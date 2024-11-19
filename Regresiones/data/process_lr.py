@@ -14,12 +14,13 @@ import joblib
 import random
 import pandas as pd
 import matplotlib.pyplot as plt
+from sklearn.calibration import LabelEncoder
 from sklearn.metrics import accuracy_score, confusion_matrix, roc_curve, auc
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
+from ucimlrepo import fetch_ucirepo
 
-# Funcion para crear el directorio de salida si no existe
 def check_output_dir():
     base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
     output_dir = os.path.join(base_dir, 'output')
@@ -28,86 +29,83 @@ def check_output_dir():
         os.makedirs(output_dir)
     return output_dir
 
-# Funcion para cargar los datos de diabetes
-def load_diabetes_data(file_path):
-    return pd.read_csv(file_path)
+# Cargar el dataset de Breast Cancer Wisconsin (Diagnostic)
+def load_breast_cancer_data():
+    dataset = fetch_ucirepo(id=17)
+    
+    # Extraer características y etiquetas
+    X = dataset.data.features
+    y = dataset.data.targets
+    
+    # Convertir a DataFrame
+    data = pd.DataFrame(X)
+    data['target'] = y
+    
+    return data
 
-# Funcion para normalizar los datos
-def normalize_diabetes_data(data):
+def normalize_data(data):
     scaler = StandardScaler()
-    # Asumimos que todas las columnas menos la última necesitan normalización
+    # Normalizar todas las columnas excepto la última (target)
     data_scaled = scaler.fit_transform(data.iloc[:, :-1])
     norm_data = pd.DataFrame(data_scaled, columns=data.columns[:-1])
     
-    # Convertir la variable objetivo en categórica
-    # Usamos la mediana como umbral, pero puedes ajustar esto según tus necesidades
-    threshold = data['Y'].median()
-    norm_data['Y'] = (data['Y'] > threshold).astype(int)
-    return norm_data
+    # Codificar la variable objetivo (Hacerla binaria)
+    le = LabelEncoder()
+    norm_data['target'] = le.fit_transform(data['target'])
+    
+    return norm_data, le
 
-# Funcion para dividir los datos en entrenamiento y prueba
 def split_data(data, test_size):
     # Seleccionar 6 columnas aleatorias para entrenamiento y prueba
-    feature_columns = list(data.columns[:-1])  # Todas las columnas excepto 'Y'
+    feature_columns = list(data.columns[:-1])
     selected_columns = random.sample(feature_columns, 6)
     
     train_data, test_data = train_test_split(data, test_size=test_size)
     
     train_input = train_data[selected_columns]
-    train_output = train_data['Y']
+    train_output = train_data['target']
 
     test_input = test_data[selected_columns]
-    test_output = test_data['Y']
+    test_output = test_data['target']
 
     return train_input, train_output, test_input, test_output, selected_columns
 
-# Funcion para entrenar un modelo de regresión lineal
 def logistic_regression(train_input, train_output):
     model = LogisticRegression()
     model.fit(train_input, train_output)
     return model
 
-# Funcion para obtener el acurracy
 def get_accuracy(model, test_input, test_output):
     predictions = model.predict(test_input)
     return accuracy_score(test_output, predictions)
 
-# Funcion para obtener la matriz de confusion
 def get_confusion_matrix(model, test_input, test_output):
     predictions = model.predict(test_input)
     return confusion_matrix(test_output, predictions)
 
-#Funcion para guardar el modelo
 def save_model(model, output_dir):
     model_path = os.path.join(output_dir, 'logistic_regression_model.pkl')
     joblib.dump(model, model_path)
     print(f"Modelo guardado como '{model_path}'")
-    
-# Funcion para cargar el modelo
+
 def load_model(model_path):
     model = joblib.load(model_path)
     return model
 
-# Funcion de graficar la curva ROC
 def plot_roc_curve(model, test_input, test_output, output_dir):
-    # Obtener las probabilidades predichas para la clase positiva
     y_pred_proba = model.predict_proba(test_input)[:, 1]
-    
-    # Calcular la curva ROC
     fpr, tpr, _ = roc_curve(test_output, y_pred_proba)
     roc_auc = auc(fpr, tpr)
     
-    # Propiedades de la curva:
     plt.figure()
     plt.plot(fpr, tpr, color='darkorange', lw=2, label=f'ROC curve (area = {roc_auc:.2f})')
     plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
     plt.xlabel('Tasa de Falsos Positivos')
     plt.ylabel('Tasa de Verdaderos Positivos')
-    plt.title('Curva ROC') # Receiver Operating Characteristic
-    plt.legend(loc='lower right') # ubicacion de la leyenda = esquina inferior derecha
+    plt.title('Curva ROC')
+    plt.legend(loc='lower right')
     plt.tight_layout()
 
-    # Guardar la curva ROC
     plt.savefig(os.path.join(output_dir, 'roc_curve.png'))
     plt.close()
     print("Curva ROC guardada como 'roc_curve.png'")
