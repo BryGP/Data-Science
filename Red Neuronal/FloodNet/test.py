@@ -10,7 +10,7 @@ from visualize import visualize_results
 x_test, y_test = load_data('D:/FloodNet-Supervised_v1.0/test/test-org-img', 'D:/FloodNet-Supervised_v1.0/test/test-label-img', img_height, img_width, num_classes)
 
 # Cargar modelo entrenado
-model = load_model('floodnet_model.h5')
+model = load_model('floodnet_model.keras')
 
 # Generar predicciones
 predictions = model.predict(x_test)

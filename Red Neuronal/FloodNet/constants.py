@@ -1,8 +1,8 @@
 # constants.py
 
 # Dimensiones de las imágenes
-img_height = 256
-img_width = 256
+img_height = 128
+img_width = 128
 
 # Número de clases en el dataset FloodNet (ajusta según corresponda)
 num_classes = 9

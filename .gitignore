@@ -6,9 +6,6 @@ __pycache__/
 # Ignorar los CSV
 *.csv
 
-# Ignorar los .keras
-*.keras
-
 # C extensions
 *.so
 

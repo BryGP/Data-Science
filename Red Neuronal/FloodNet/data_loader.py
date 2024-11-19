@@ -31,6 +31,12 @@ def load_data(img_dir, mask_dir, img_height, img_width, num_classes):
     images = np.array(images, dtype=np.float32) / 255.0
     masks = np.array(masks, dtype=np.int32)
 
+    # Verificar valores únicos en las máscaras
+    print("Valores únicos en las máscaras antes de clip:", np.unique(masks))
+    
+    # Limitar valores al rango permitido
+    masks = np.clip(masks, 0, num_classes - 1)
+
     if num_classes > 1:
         masks = to_categorical(masks, num_classes=num_classes)
 

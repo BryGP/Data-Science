@@ -18,20 +18,20 @@ model = unet_model((img_height, img_width, 3), num_classes)
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
 # Callbacks
-checkpoint = ModelCheckpoint('floodnet_model_best.h5', save_best_only=True, monitor='val_loss', mode='min')
+checkpoint = ModelCheckpoint('floodnet_model_best.keras', save_best_only=True, monitor='val_loss', mode='min')
 early_stopping = EarlyStopping(patience=10, monitor='val_loss', mode='min', restore_best_weights=True)
 
 # Entrenar
 history = model.fit(
     x_train, y_train,
     validation_data=(x_val, y_val),
-    epochs=50,
-    batch_size=16,
+    epochs=10,
+    batch_size=32,
     callbacks=[checkpoint, early_stopping]
 )
 
 # Guardar el modelo final
-model.save('floodnet_model_final.h5')
+model.save('floodnet_model_final.keras')
 
 # Visualizar el historial de entrenamiento
 import matplotlib.pyplot as plt
