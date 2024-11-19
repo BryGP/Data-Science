@@ -19,14 +19,14 @@ model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accur
 
 # Callbacks
 checkpoint = ModelCheckpoint('floodnet_model_best.keras', save_best_only=True, monitor='val_loss', mode='min')
-early_stopping = EarlyStopping(patience=10, monitor='val_loss', mode='min', restore_best_weights=True)
+early_stopping = EarlyStopping(patience=50, monitor='val_loss', mode='min', restore_best_weights=True)
 
 # Entrenar
 history = model.fit(
     x_train, y_train,
     validation_data=(x_val, y_val),
-    epochs=10,
-    batch_size=32,
+    epochs=50,
+    batch_size=64,
     callbacks=[checkpoint, early_stopping]
 )
 
