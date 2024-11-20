@@ -9,7 +9,6 @@ def decode_mask(mask):
     """
     height, width = mask.shape
     decoded = np.zeros((height, width, 3), dtype=np.uint8)
-    decoded_prediction = decode_mask(decoded_prediction)
 
     for class_id, color in color_map.items():
         decoded[mask == class_id] = color

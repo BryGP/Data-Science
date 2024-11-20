@@ -7,7 +7,7 @@ from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping
 img_dir_train = 'D:/FloodNet-Supervised_v1.0/train/train-org-img'
 mask_dir_train = 'D:/ColorMasks-FloodNetv1.0/ColorMasks-TrainSet'
 img_dir_val = 'D:/FloodNet-Supervised_v1.0/val/val-org-img'
-mask_dir_val = 'D:/ColorMasks-FloodNetv1.0/ColorMasks-ValSet'
+mask_dir_val = 'D:/FloodNet-Supervised_v1.0/val/val-label-img'
 
 # Cargar datos
 x_train, y_train = load_data(img_dir_train, mask_dir_train, img_height, img_width, num_classes)
@@ -24,7 +24,7 @@ early_stopping = EarlyStopping(patience=50, monitor='val_loss', mode='min', rest
 # Entrenar
 history = model.fit(
     x_train, y_train,
-    validation_data=(x_val, y_val),
+    validation_split=0.2,
     epochs=50,
     batch_size=64,
     callbacks=[checkpoint, early_stopping]

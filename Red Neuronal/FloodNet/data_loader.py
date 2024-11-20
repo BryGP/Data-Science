@@ -1,43 +1,47 @@
-import os
-import cv2
+# data_loader.py
+
+import tensorflow as tf
 import numpy as np
 from tensorflow.keras.utils import to_categorical
 
+def preprocess_image(image, mask, target_size=(128, 128)):
+    # Redimensionar imagen
+    image = tf.image.resize(image, target_size, method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
+    # Redimensionar máscara
+    mask = tf.image.resize(mask, target_size, method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
+    return image, mask
+
 def load_data(img_dir, mask_dir, img_height, img_width, num_classes):
-    images = []
-    masks = []
-    for img_file in os.listdir(img_dir):
-        img_path = os.path.join(img_dir, img_file)
-        mask_file = img_file.replace('.jpg', '_lab.png')
-        mask_path = os.path.join(mask_dir, mask_file)
+    # Carga de imágenes y máscaras
+    images = []  # Lista para almacenar imágenes
+    masks = []   # Lista para almacenar máscaras
 
-        if not os.path.exists(img_path) or not os.path.exists(mask_path):
-            print(f"Advertencia: {img_path} o {mask_path} no existe.")
-            continue
+    # Suponiendo que tienes una lista de nombres de archivos de imágenes y máscaras
+    image_files = [...]  # Lista de nombres de archivos de imágenes
+    mask_files = [...]   # Lista de nombres de archivos de máscaras
 
-        img = cv2.imread(img_path)
-        mask = cv2.imread(mask_path, cv2.IMREAD_GRAYSCALE)
+    for img_file, mask_file in zip(image_files, mask_files):
+        # Cargar imagen
+        img = tf.io.read_file(img_dir + img_file)
+        img = tf.image.decode_image(img, channels=3)
+        img = tf.image.convert_image_dtype(img, tf.float32)  # Normalizar a [0,1]
 
-        if img is None or mask is None:
-            print(f"Advertencia: No se pudo leer {img_path} o {mask_path}.")
-            continue
+        # Cargar máscara
+        mask = tf.io.read_file(mask_dir + mask_file)
+        mask = tf.image.decode_image(mask, channels=1)
+        mask = tf.image.convert_image_dtype(mask, tf.uint8)  # Asegurar que la máscara sea entera
 
-        img = cv2.resize(img, (img_width, img_height))
-        mask = cv2.resize(mask, (img_width, img_height), interpolation=cv2.INTER_NEAREST)
+        # Preprocesar imagen y máscara
+        img, mask = preprocess_image(img, mask, target_size=(img_height, img_width))
 
         images.append(img)
         masks.append(mask)
 
-    images = np.array(images, dtype=np.float32) / 255.0
-    masks = np.array(masks, dtype=np.int32)
+    # Convertir listas a arrays de NumPy
+    images = np.array(images)
+    masks = np.array(masks)
 
-    # Verificar valores únicos en las máscaras
-    print("Valores únicos en las máscaras antes de clip:", np.unique(masks))
-    
-    # Limitar valores al rango permitido
-    masks = np.clip(masks, 0, num_classes - 1)
-
-    if num_classes > 1:
-        masks = to_categorical(masks, num_classes=num_classes)
+    # Convertir máscaras a one-hot encoding
+    masks = to_categorical(masks, num_classes=num_classes)
 
     return images, masks
