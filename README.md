@@ -1,54 +1,58 @@
 # Data Science
 
-Trabajos a desarrollar hasta el momento:
+Current work and projects in development:
 
-- Limpieza y preparación de datos
-- Análisis exploratorio de datos
-- Modelado predictivo
-- Visualización de datos (histogramas, graficas de correlacion, heatmaps)
-- Uso de bibliotecas como Pandas, NumPy, y Matplotlib
+- Data cleaning and preparation
+- Exploratory data analysis
+- Predictive modeling
+- Data visualization (histograms, correlation plots, heatmaps)
+- Utilization of libraries such as Pandas, NumPy, and Matplotlib
+- Neural network implementation for image analysis and flood detection
 
-El objetivo principal del proyecto es aplicar estos conocimientos para resolver problemas reales mediante el análisis de datos.
+The main objective of this project is to apply these skills to solve real-world problems through data analysis and machine learning techniques.
 
-## Estructura del Proyecto
+## Project Structure
 
-- `utils/`: Contiene las utilidades por proyecto.
-- `scripts/`: Scripts de Python utilizados para el procesamiento de datos.
-- `output/`: Resultados y visualizaciones generadas.
+- `utils/`: Contains utilities for each project.
+- `scripts/`: Python scripts used for data processing.
+- `output/`: Generated results and visualizations.
+- `Red Neuronal/`: Neural network projects, including FloodNet for flood detection.
 
-## Entorno de Desarrollo
+## Development Environment
 
-Para trabajar en este proyecto, se usara un entorno virtual (venv). Aquí te dejamos los pasos para configurarlo:
+To work on this project, we use a virtual environment (venv). Here are the steps to set it up:
 
-1. Crea un entorno virtual:
-    ```bash
+1. Create a virtual environment:
+    ```
     python -m venv venv
+2. Activate the virtual environment:
     ```
-2. Activa el entorno virtual:
-    - En Windows:
-      ```bash
-      .\venv\Scripts\activate
-      ```
-3. Instala las dependencias necesarias:
-    ```bash
-    pip install numpy
-    pip install matplotlib
-    pip install pandas
-    pip install scikitlearn
-    ```
+    .\venv\Scripts\activate    
+3. Install the necessary dependencies:
+   ```
+    pip install numpy matplotlib pandas scikit-learn tensorflow keras
+## Additional Details
 
-## Detalles Adicionales
+### Data Normalization
 
-### Normalización de Datos
+Data normalization is a crucial step in our data analysis process. In this project, we have employed techniques such as standardization and min-max normalization to ensure our models function correctly.
 
-La normalización de datos es un paso crucial en el análisis de datos. En este proyecto, hemos utilizado técnicas como la estandarización y la normalización min-max para asegurar que nuestros modelos funcionen correctamente.
+### Data Training and Testing
 
-### Entrenamiento de Datos
-Lo que hicimos en la parte de **Testing** fue entrenar un modelo de datos normalizado acerca de unas estadisticas del Inegi, tanto como para uso visual como la parte del bacj
+In the **Testing** phase, we trained a normalized data model using INEGI statistics, both for visual representation and backend processing. Our neural network projects, particularly FloodNet, involve training on satellite imagery for flood detection and segmentation.
 
-### Herramientas Utilizadas
+### Tools and Technologies Used
 
-- **Pandas**: Para la manipulación y análisis de datos.
-- **NumPy**: Para operaciones numéricas.
-- **Matplotlib**: Para la visualización de datos.
-- **Scikit-learn**: Para el modelado predictivo.
+- **Pandas**: For data manipulation and analysis.
+- **NumPy**: For numerical operations.
+- **Matplotlib**: For data visualization.
+- **Scikit-learn**: For predictive modeling and machine learning algorithms.
+- **TensorFlow & Keras**: For building and training neural networks, especially in our flood detection project.
+
+
+### Neural Network Projects
+
+Our repository includes advanced neural network projects, with a focus on:
+
+- **FloodNet**: A convolutional neural network designed for flood detection and segmentation in satellite imagery.
+- **Image Analysis**: Implementing various architectures for image classification and segmentation tasks.

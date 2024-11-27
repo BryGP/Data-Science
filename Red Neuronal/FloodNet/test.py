@@ -11,7 +11,7 @@ x_test, y_test, num_classes_test = load_data('D:/FloodNet-Supervised_v1.0/test/t
 print(f"Número de clases en el conjunto de prueba: {num_classes_test}")
 
 # Cargar modelo entrenado
-model = load_model('floodnet_model_best.keras')
+model = load_model('floodnet_model_best2.keras')
 
 # Generar predicciones
 predictions = model.predict(x_test)
