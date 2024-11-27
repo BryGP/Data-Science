@@ -2,7 +2,7 @@ import os
 import numpy as np
 from tensorflow.keras.models import load_model
 from tensorflow.keras.datasets import cifar10
-from tensorflow.keras.utils import to_categorical
+from tensorflow.keras.utils import to_categorical # type: ignore
 import matplotlib.pyplot as plt
 
 # Set the current working directory to the script's location
